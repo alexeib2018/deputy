@@ -1,0 +1,192 @@
+body {
+	font: 400 15px/24px "Open Sans", sans-serif;
+	color: rgb(79, 79, 79);
+	font-size-adjust: none;
+	font-stretch: normal;
+}
+h1 {
+	color: rgb(69, 200, 128); line-height: 1.2; font-size: 30px; font-weight: 700; margin-bottom: 20px;
+}
+p {
+	margin-bottom: 25px;
+}
+a {
+	text-decoration: none;
+}
+.header .brand-logo {
+	padding-top: 26px; padding-bottom: 13px;
+}
+header .main-navigation {
+	text-align: left; min-height: 60px; background-color: rgb(119, 224, 166);
+}
+header .cute-12-tablet {
+	padding-top: 0px; padding-bottom: 0px;
+}
+nav#nav-main ul {
+	margin: 0px; padding: 0px; list-style-type: none;
+}
+nav#nav-main li {
+	background-position: right; padding-right: 5px; display: inline-block; background-image: url("../images/nav-sep.png"); background-repeat: no-repeat;
+}
+nav#nav-main li:last-child {
+	background-image: none;
+}
+nav#nav-main a {
+	padding: 18px 15px; color: rgb(79, 79, 79); display: block;
+}
+nav#nav-main a:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+header .main-navigation {
+	text-align: left; position: relative; background-color: rgb(119, 224, 166);
+}
+nav#nav-mobile {
+	padding-top: 60px; display: none;
+}
+nav#nav-mobile ul {
+	text-align: center; margin-right: auto; margin-left: auto; display: none; list-style-type: none; background-color: rgb(119, 224, 166);
+}
+nav#nav-mobile li {
+	margin: 0px 5px; padding: 5px 0px; border-bottom-color: rgba(0, 0, 0, 0.2); border-bottom-width: 1px; border-bottom-style: solid; display: block;
+}
+nav#nav-mobile li:last-child {
+	border-bottom-color: currentColor; border-bottom-width: medium; border-bottom-style: none;
+}
+nav#nav-mobile a {
+	padding: 10px 30px; color: rgb(79, 79, 79); display: block;
+}
+nav#nav-mobile a:hover {
+	color: rgb(255, 255, 255); background-color: rgba(0, 0, 0, 0.2);
+}
+#nav-trigger {
+	text-align: center; display: none; position: absolute;
+}
+#nav-trigger span {
+	padding: 18px 30px; color: white; text-transform: uppercase; display: inline-block; cursor: pointer; background-color: rgb(119, 224, 166);
+}
+#nav-trigger span:hover {
+	
+}
+@media all and (max-width:900px)
+{
+#nav-trigger {
+	display: inline-block;
+}
+nav#nav-main {
+	display: none;
+}
+nav#nav-mobile {
+	display: block;
+}
+}
+header form.search {
+	background: rgb(79, 79, 79); border-radius: 3px; height: 34px; margin-top: 13px;
+}
+header form.search input {
+	background: none; border: transparent; border-image: none; color: rgb(129, 129, 129); line-height: 34px; padding-left: 15px;
+}
+header form.search img {
+	padding-right: 10px;
+}
+header form.search .btn {
+	background: none; border: transparent; border-image: none;
+}
+.hero {
+	background: url("../images//hero-bg.jpg") no-repeat center / cover; height: auto; overflow: hidden; padding-bottom: 30px; z-index: 99;
+}
+.hero-block {
+	padding: 20px; border-radius: 5px; border: 2px solid rgba(0, 0, 0, 0.2); border-image: none; color: rgb(255, 255, 255); background-color: rgba(47, 237, 132, 0.2);
+}
+.hero-content img {
+	padding-top: 25px; padding-bottom: 15px;
+}
+.hero-block p span {
+	font-weight: 600;
+}
+.hero-block p {
+	margin-bottom: 15px;
+}
+.hero-block p.space {
+	line-height: 30px;
+}
+.hero-block form.sign-up {
+	background: rgb(255, 255, 255); border-radius: 5px; text-align: left; overflow: hidden; position: relative; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+}
+.hero-block form.sign-up img {
+	padding: 0px; left: 15px; top: 17px; position: relative;
+}
+.hero-block form.sign-up .form-group {
+	margin-bottom: 0px;
+}
+.hero-block form.sign-up input {
+	width: 100%; height: 46px; color: rgb(68, 68, 68); line-height: 46px; padding-right: 200px; padding-left: 40px;
+}
+.hero-block form.sign-up .btn {
+	background: rgb(94, 174, 215); padding: 0px 50px; border-radius: 5px; border: transparent; border-image: none; top: 3px; right: 3px; color: rgb(255, 255, 255); text-transform: uppercase; line-height: 40px; font-size: 17px; font-weight: 700; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+}
+.intro-content p {
+	font-weight: 600;
+}
+.section-1.intro-content {
+	background: url("../images/logo-bg.png") no-repeat left bottom; position: relative;
+}
+.section-1.intro-content img {
+	left: -130px; bottom: 0px; position: absolute;
+}
+.intro-content h1 {
+	letter-spacing: -1px; margin-top: 5px;
+}
+.strength-intro {
+	margin-bottom: 50px;
+}
+.fanboy-intro {
+	margin-bottom: 50px;
+}
+.intro-content h4 {
+	font-size: 20px; font-weight: 700;
+}
+.section-2.intro-content {
+	background: url("../images/logo-bg2.png") no-repeat right bottom; position: relative;
+}
+.section-2.intro-content img.intro-girl {
+	right: -150px; bottom: 0px; position: absolute;
+}
+.section-2.intro-content section {
+	margin-left: 30px; position: relative;
+}
+.section-2.intro-content section img {
+	left: -25px; top: 5px; position: absolute;
+}
+.section-3.intro-content {
+	background: url("../images/logo-bg3.png") no-repeat left bottom; position: relative;
+}
+.section-3.intro-content img {
+	left: -140px; bottom: 0px; position: absolute;
+}
+ul {
+	list-style: none;
+}
+li {
+	list-style: none;
+}
+.confidence-intro ul {
+	margin-bottom: 50px; margin-left: 40px;
+}
+.confidence-intro ul li {
+	height: 28px; line-height: 1; margin-bottom: 10px; list-style-image: url("../images/arrow.png");
+}
+.bottom-intro {
+	padding-bottom: 50px;
+}
+footer {
+	background: rgb(76, 76, 76);
+}
+footer p {
+	margin: 0px; color: rgb(201, 201, 201); line-height: 38px; font-size: 12px; font-weight: 600;
+}
+@media only screen and (min-width:62em)
+{
+.hero-block .text-wrapper {
+	padding-right: 60px; padding-left: 60px;
+}
+}

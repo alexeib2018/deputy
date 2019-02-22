@@ -1,0 +1,199 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta content="IE=11.0000" http-equiv="X-UA-Compatible">
+    <meta charset="utf-8">           
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">               
+    <meta name="viewport" content="width=device-width, initial-scale=1">             
+  
+    <title>Fresh Grill Quickview Portal</title>
+    <link href="/favicon.ico" rel="icon" type="image/ico">
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/css.css" rel="stylesheet" type="text/css">
+    <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/cutegrids.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/print.min.css" rel="stylesheet">
+
+    <!-- Include all compiled plugins (below), or include individual files as needed --> 
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.json.min.js"></script>
+    <script src="/js/print.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/vue.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <!-- Minified version of `es6-promise-auto` below. -->
+    <script src="/js/es6-promise.min.js"></script>
+    <script src="/js/es6-promise.auto.min.js"></script> 
+
+    <style>
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+
+        .odd {
+            background-color:#ddd
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="app">
+        <!-- header class="header" -->
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="brand-logo text-center navbar-nav navbar-left">
+                <a href="/">
+            	     <img alt="logo" src="/img/logo.png">
+                </a>
+            </div>
+          </div>
+        </nav>
+        <!-- /header -->
+
+        <div class="row">
+          	<div class="cute-12-tablet">
+                <div>
+              	    <h1 style="width:400px; margin-bottom:10px;">Shift scpecific day:</h1>
+                </div>
+                <div>
+                    <input type="text" 
+                           :value="date1">
+                </div>
+                <div style="margin-top:10px; margin-bottom:20px;">
+                    <button type="button"
+                            class="btn btn-success"
+                            @click="shift_specific_day()">
+                        Check API
+                    </button>
+                </div>
+
+                <div>
+                    <h1 style="width:400px; margin-bottom:10px;">Timesheet:</h1>
+                </div>
+                <div>
+                    <input type="text" 
+                           :value="date2">
+                </div>
+                <div>
+                    <input type="text" 
+                           :value="date3">
+                </div>
+                <div style="margin-top:10px; margin-bottom:20px;">
+                    <button type="button"
+                            class="btn btn-success"
+                            @click="timesheets()">
+                        Check API
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <footer class="text-center"
+                style="position: absolute;
+                       left: 0;
+                       bottom: 0;
+                       width: 100%;">
+            <div class="row">
+              <p class="copyright">© Copyright FreshGrillFoods.com, 2019</p>
+            </div>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+        function verify_number(t) {
+            if (t.value.match(/^(\d){1,10}$/g)) {
+                t.setCustomValidity('')
+                t.style.borderColor = ''
+                t.style.boxShadow = ''
+            } else {
+                t.setCustomValidity('Wrong number')
+                t.style.borderColor = '#FF0000'
+                t.style.boxShadow = 'inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6)'
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                date1: '2019-02-21',
+                date2: '2019-02-19',
+                date3: '2019-02-21'
+            }
+        },
+        methods: {
+            shift_specific_day: function() {
+                // Example calls to show me all shifts on a specific day:
+                $.ajax({ url: 'https://www.deputy.com/api/v1/resource/Roster/QUERY',
+                         type: 'POST',
+                         crossDomain: true,
+                         dataType: 'jsonp',
+                         data: $.toJSON({
+                             search: {
+                                 f1: {field: 'Id', type:'gt', data: 0},
+                                 f2: {field: 'Date', type:'eq', data: this.date1 }
+                             },
+                         }),
+                         success: function(mixreply) {
+                             if(mixreply.length === 0){
+                                 console.log('no object found');
+                             } else {
+                                 console.log(mixreply);
+                                 console.log('success');
+                             }
+                         },
+                         error: function(mixerror) {
+                             console.log('error');
+                             console.log(mixerror);
+                         },
+                         complete: function() {
+                             console.log('ajax complete');
+                         }
+                    });
+
+                // Display name (Employee), schedule date (Date), schedule start time(StartTime), schedule end time(EndTime), schedule meal break (Total)(MealBreak),
+                // schedule total time(TotalTime), timesheet start time(Use MatchedByTimesheet Foreign Object to find timesheet and pull info from Timesheet Object),
+                // timesheet end time(Use MatchedByTimesheet Foreign Object to find timesheet and pull info from Timesheet Object),
+                // position (Position is not available, but Operational Unit == Area of Work)
+            },
+            timesheets: function() {
+                // For timesheets:
+                $.ajax({ url: 'https://www.deputy.com/api/v1/resource/Timesheet/QUERY',
+                         type: 'POST',
+                         crossDomain: true,
+                         dataType: 'jsonp',
+                         data: $.toJSON({
+                             search: {
+                                 f1: {field: 'Date', type:'ge', data: '2019-02-19'},
+                                 f2: {field: 'Date', type:'le', data: '2019-02-21'}
+                             }
+                         }),
+                         success: function(mixreply) {
+                             if(mixreply.length === 0) {
+                                 console.log('no object found');
+                             } else {
+                                 console.log(mixreply);
+                                 console.log('success');
+                             }
+                         },
+                         error: function(mixerror) {
+                             console.log('error');
+                             console.log(mixerror);
+                         },
+                         complete: function() {
+                             console.log('ajax complete');
+                         }
+                    });
+            }
+        }
+    })
+    </script>
+</body>
+</html>
