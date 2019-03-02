@@ -171,8 +171,8 @@
                          dataType: 'jsonp',
                          data: $.toJSON({
                              search: {
-                                 f1: {field: 'Date', type:'ge', data: '2019-02-19'},
-                                 f2: {field: 'Date', type:'le', data: '2019-02-21'}
+                                 f1: {field: 'Date', type:'ge', data: this.date2},
+                                 f2: {field: 'Date', type:'le', data: this.date3}
                              }
                          }),
                          success: function(mixreply) {
