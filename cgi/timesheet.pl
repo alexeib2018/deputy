@@ -63,7 +63,7 @@ for(my $i=0; $i<$arr_size; $i++) {
 close FH;
 #print "pretty:\n".JSON->new->pretty->encode(\@arr);
 
-0;
+exit(0);
 
 <<EOF
 [{
