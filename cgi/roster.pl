@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use Try::Catch;
 use Net::Curl::Easy;
 use JSON;
 use JSON::Parse 'parse_json';
@@ -13,6 +14,7 @@ my $response_body = Deputy::POST($url, $postvars);
 
 my $filename = "roster.csv";
 open(FH, '>', $filename) or die $!;
+print FH '"Display Name","Schedule Date","Schedule Start Time","Schedule End Time","Schedule Meal Break (Total)","Schedule Total Time","Timesheet Start Time","Timesheet End Time","Position"\n';
 
 my @json_arr = parse_json($response_body);
 # print $response_body."\n";
@@ -20,26 +22,29 @@ my @json_arr = parse_json($response_body);
 my @arr = @{$json_arr[0]};
 my $arr_size = scalar @arr;
 for(my $i=1; $i<=$arr_size; $i++) {
-	my %rec = %{$arr[$i]};
+	try {
+		my %rec = %{$arr[$i]};
 
-	my @employee_arr = @{Deputy::get_employee($rec{"Employee"})};
-	my %employee = %{$employee_arr[0]};
+		my @employee_arr = @{Deputy::get_employee($rec{"Employee"})};
+		my %employee = %{$employee_arr[0]};
 
-	# print "employee:\n".JSON->new->pretty->encode(\%employee);
-	my $display_name = $employee{"DisplayName"};
-	print "$i($arr_size) $display_name\n";
+		# print "employee:\n".JSON->new->pretty->encode(\%employee);
+		my $display_name = $employee{"DisplayName"};
+		my $employee_id = $employee{"Id"};
+		print "$i($arr_size) $display_name ($employee_id)\n";
 
-	my $position = $employee{"Position"} ? $employee{"Position"} : "";
+		my $position = $employee{"Position"} ? $employee{"Position"} : "";
 
-	my $schedule_date = $rec{"Date"};
-	my $schedule_start_time = $rec{"StartTime"};
-	my $schedule_end_time = $rec{"EndTime"};
-	my $schedule_meal_break = $rec{"Mealbreak"};
-	my $schedule_total_time = $rec{"TotalTime"};
-	my $timesheet_start_time = $rec{"StartTimeLocalized"};
-	my $timesheet_end_time = $rec{"EndTimeLocalized"};
+		my $schedule_date = substr $rec{"StartTimeLocalized"}, 0, 10;
+		my $schedule_start_time = substr $rec{"StartTimeLocalized"}, 11, 5;
+		my $schedule_end_time = substr $rec{"EndTimeLocalized"}, 11, 5;
+		my $schedule_meal_break = substr $rec{"Mealbreak"}, 11, 5;
+		my $schedule_total_time = $rec{"TotalTime"};
+		my $timesheet_start_time = ""; #localtime($rec{"StartTime"});
+		my $timesheet_end_time = ""; #localtime($rec{"EndTime"});
 
-	print FH "$display_name,$schedule_date,$schedule_start_time,$schedule_end_time,$schedule_meal_break,$schedule_total_time,$timesheet_start_time,$timesheet_end_time,$position\n";
+		print FH "\"$display_name\",\"$schedule_date\",\"$schedule_start_time\",\"$schedule_end_time\",\"$schedule_meal_break\",\"$schedule_total_time\",\"$timesheet_start_time\",\"$timesheet_end_time\",\"$position\"\n";
+	} catch {};
 }
 
 close FH;
@@ -51,8 +56,8 @@ exit(0);
 [{
 	"Id":1,
 	"Date":"2019-03-02T00:00:00-05:00",					# schedule date
-	"StartTime":1551535200,								# schedule start time
-	"EndTime":1551564000,								# schedule end time
+	"StartTime":1551535200,								# timesheet start time
+	"EndTime":1551564000,								# timesheet end time
 	"Mealbreak":"2019-03-04T00:30:00-05:00",			# schedule meal break (Total)
 	"Slots":[{
 		"blnEmptySlot":false,
@@ -91,8 +96,8 @@ exit(0);
 	"Created":"2019-03-02T10:56:44-05:00",
 	"Modified":"2019-03-02T10:58:25-05:00",
 	"OnCost":0,
-	"StartTimeLocalized":"2019-03-02T09:00:00-05:00",	# timesheet start time
-	"EndTimeLocalized":"2019-03-02T17:00:00-05:00",		# timesheet end time
+	"StartTimeLocalized":"2019-03-02T09:00:00-05:00",	# schedule start time
+	"EndTimeLocalized":"2019-03-02T17:00:00-05:00",		# schedule end time
 	"ExternalId":null,
 	"ConnectCreator":null
 }]
