@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Try::Catch;
 use Net::Curl::Easy;
-use JSON;
+#use JSON;
 use JSON::Parse 'parse_json';
 use Deputy;
 
@@ -40,12 +40,12 @@ for(my $i=1; $i<=$arr_size; $i++) {
 		my $schedule_end_time = substr $rec{"EndTimeLocalized"}, 11, 5;
 		my $schedule_meal_break = substr $rec{"Mealbreak"}, 11, 5;
 		my $schedule_total_time = $rec{"TotalTime"};
-		my $timesheet_start_time = ""; #localtime($rec{"StartTime"});
-		my $timesheet_end_time = ""; #localtime($rec{"EndTime"});
+		my $timesheet_start_time = substr $rec{"StartTimeLocalized"}, 11, 5;
+		my $timesheet_end_time = substr $rec{"EndTimeLocalized"}, 11, 5;
 
 		print FH "\"$display_name\",\"$schedule_date\",\"$schedule_start_time\",\"$schedule_end_time\",\"$schedule_meal_break\",\"$schedule_total_time\",\"$timesheet_start_time\",\"$timesheet_end_time\",\"$position\"\n";
 	} catch {
-		print;
+		# print;
 	};
 }
 
