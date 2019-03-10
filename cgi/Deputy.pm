@@ -3,6 +3,8 @@ use strict;
 use warnings;
 use Exporter;
 use Net::Curl::Easy;
+use JSON::Parse 'parse_json';
+
 
 require "settings.pl";
 our $endpoint;
@@ -48,6 +50,43 @@ sub POST {
 	my $retcode = $curl->perform;
 
 	$response_body;
+}
+
+sub GET {
+	my $url = shift;
+
+	my $curl = Net::Curl::Easy->new;
+
+	$curl->setopt(Net::Curl::Easy::CURLOPT_HTTPGET(), 1);
+	$curl->setopt(Net::Curl::Easy::CURLOPT_RESUME_FROM(), 0);
+	$curl->setopt(Net::Curl::Easy::CURLOPT_URL(), $endpoint.$url);
+	#$curl->setopt(Net::Curl::Easy::CURLOPT_RETURNTRANSFER(), 1);
+	$curl->setopt(Net::Curl::Easy::CURLOPT_FOLLOWLOCATION(), 1);
+
+	$curl->setopt(Net::Curl::Easy::CURLOPT_SSL_VERIFYHOST(), 0);
+	$curl->setopt(Net::Curl::Easy::CURLOPT_SSL_VERIFYPEER(), 0);
+	$curl->setopt(Net::Curl::Easy::CURLOPT_TIMEOUT(), 500);
+
+	$curl->setopt(Net::Curl::Easy::CURLOPT_HTTPHEADER(), [ 'Content-type: application/json',
+														   'Accept: application/json',
+														   'Authorization : OAuth ' . $token,
+														   'dp-meta-option : none' ]);
+
+	my $response_body;
+	$curl->setopt(Net::Curl::Easy::CURLOPT_WRITEDATA(), \$response_body);
+
+	my $retcode = $curl->perform;
+
+	$response_body;
+}
+
+sub get_employee {
+	my $employee_id = shift;
+	my $url = "/api/v1/supervise/employee/$employee_id";
+	my $response_body = GET($url);
+
+	my @employee = parse_json($response_body);
+	\@employee;
 }
 
 1;
