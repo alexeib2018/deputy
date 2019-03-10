@@ -2,54 +2,35 @@
 use strict;
 use warnings;
 use Net::Curl::Easy;
-#use JSON;
+use JSON;
 use JSON::Parse 'parse_json';
+use Deputy;
 
-
-require "settings.pl";
-our $endpoint;
-our $token;
 
 my $url = '/api/v1/resource/Roster/QUERY';
 my $postvars = '{"search": {"f1": {"field":"Id", "type":"gt", "data":0}, "f2": {"field":"Date", "type":"eq", "data":"'.$ARGV[0].'"}}}';
-
-my $curl = Net::Curl::Easy->new;
-
-$curl->setopt(Net::Curl::Easy::CURLOPT_HTTPGET(), 1);
-$curl->setopt(Net::Curl::Easy::CURLOPT_RESUME_FROM(), 0);
-$curl->setopt(Net::Curl::Easy::CURLOPT_URL(), $endpoint.$url);
-#$curl->setopt(Net::Curl::Easy::CURLOPT_RETURNTRANSFER(), 1);
-$curl->setopt(Net::Curl::Easy::CURLOPT_FOLLOWLOCATION(), 1);
-
-$curl->setopt(Net::Curl::Easy::CURLOPT_SSL_VERIFYHOST(), 0);
-$curl->setopt(Net::Curl::Easy::CURLOPT_SSL_VERIFYPEER(), 0);
-$curl->setopt(Net::Curl::Easy::CURLOPT_TIMEOUT(), 500);
-
-if($postvars){
-	$curl->setopt(Net::Curl::Easy::CURLOPT_POST(), 1);
-	$curl->setopt(Net::Curl::Easy::CURLOPT_POSTFIELDS(), $postvars);
-}
-
-$curl->setopt(Net::Curl::Easy::CURLOPT_HTTPHEADER(), [ 'Content-type: application/json',
-													   'Accept: application/json',
-													   'Authorization : OAuth ' . $token,
-													   'dp-meta-option : none' ]);
-
-my $response_body;
-$curl->setopt(Net::Curl::Easy::CURLOPT_WRITEDATA(), \$response_body);
-
-my $retcode = $curl->perform;
+my $response_body = Deputy::POST($url, $postvars);
 
 my $filename = "roster.csv";
 open(FH, '>', $filename) or die $!;
 
 my @json_arr = parse_json($response_body);
+# print $response_body."\n";
 
 my @arr = @{$json_arr[0]};
 my $arr_size = scalar @arr;
-for(my $i=0; $i<$arr_size; $i++) {
+for(my $i=1; $i<=$arr_size; $i++) {
 	my %rec = %{$arr[$i]};
-	my $display_name = $rec{"Comment"};
+
+	my @employee_arr = @{Deputy::get_employee($rec{"Employee"})};
+	my %employee = %{$employee_arr[0]};
+
+	# print "employee:\n".JSON->new->pretty->encode(\%employee);
+	my $display_name = $employee{"DisplayName"};
+	print "$i($arr_size) $display_name\n";
+
+	my $position = $employee{"Position"} ? $employee{"Position"} : "";
+
 	my $schedule_date = $rec{"Date"};
 	my $schedule_start_time = $rec{"StartTime"};
 	my $schedule_end_time = $rec{"EndTime"};
@@ -57,7 +38,6 @@ for(my $i=0; $i<$arr_size; $i++) {
 	my $schedule_total_time = $rec{"TotalTime"};
 	my $timesheet_start_time = $rec{"StartTimeLocalized"};
 	my $timesheet_end_time = $rec{"EndTimeLocalized"};
-	my $position = $rec{"Id"};
 
 	print FH "$display_name,$schedule_date,$schedule_start_time,$schedule_end_time,$schedule_meal_break,$schedule_total_time,$timesheet_start_time,$timesheet_end_time,$position\n";
 }
@@ -69,7 +49,7 @@ exit(0);
 
 <<EOF
 [{
-	"Id":1,												# position
+	"Id":1,
 	"Date":"2019-03-02T00:00:00-05:00",					# schedule date
 	"StartTime":1551535200,								# schedule start time
 	"EndTime":1551564000,								# schedule end time
@@ -92,8 +72,8 @@ exit(0);
 	"TotalTime":7.5,								 	# schedule total time
 	"Cost":0,
 	"OperationalUnit":1,
-	"Employee":1,
-	"Comment":"Test version",						 	# Display name
+	"Employee":1,										# Display name, position
+	"Comment":"Test version",
 	"Warning":"",
 	"WarningOverrideComment":"",
 	"Published":false,
