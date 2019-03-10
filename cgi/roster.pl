@@ -21,7 +21,7 @@ my @json_arr = parse_json($response_body);
 
 my @arr = @{$json_arr[0]};
 my $arr_size = scalar @arr;
-for(my $i=1; $i<=$arr_size; $i++) {
+for(my $i=0; $i<$arr_size; $i++) {
 	try {
 		my %rec = %{$arr[$i]};
 
@@ -31,7 +31,8 @@ for(my $i=1; $i<=$arr_size; $i++) {
 		# print "employee:\n".JSON->new->pretty->encode(\%employee);
 		my $display_name = $employee{"DisplayName"};
 		my $employee_id = $employee{"Id"};
-		print "$i($arr_size) $display_name ($employee_id)\n";
+		my $ii = $i+1;
+		print "$ii($arr_size) $display_name ($employee_id)\n";
 
 		my $position = $employee{"Position"} ? $employee{"Position"} : "";
 
