@@ -14,7 +14,7 @@ my $response_body = Deputy::POST($url, $postvars);
 
 my $filename = "roster.csv";
 open(FH, '>', $filename) or die $!;
-print FH '"Display Name","Schedule Date","Schedule Start Time","Schedule End Time","Schedule Meal Break (Total)","Schedule Total Time","Timesheet Start Time","Timesheet End Time","Position"\n';
+print FH "\"Display Name\",\"Schedule Date\",\"Schedule Start Time\",\"Schedule End Time\",\"Schedule Meal Break (Total)\",\"Schedule Total Time\",\"Timesheet Start Time\",\"Timesheet End Time\",\"Position\"\n";
 
 my @json_arr = parse_json($response_body);
 # print $response_body."\n";
@@ -44,7 +44,9 @@ for(my $i=1; $i<=$arr_size; $i++) {
 		my $timesheet_end_time = ""; #localtime($rec{"EndTime"});
 
 		print FH "\"$display_name\",\"$schedule_date\",\"$schedule_start_time\",\"$schedule_end_time\",\"$schedule_meal_break\",\"$schedule_total_time\",\"$timesheet_start_time\",\"$timesheet_end_time\",\"$position\"\n";
-	} catch {};
+	} catch {
+		print;
+	};
 }
 
 close FH;
