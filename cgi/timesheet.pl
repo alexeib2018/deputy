@@ -8,7 +8,7 @@ use JSON::Parse 'parse_json';
 use Deputy;
 
 
-my $url = '/api/v1/resource/Timesheet/QUERY';
+my $url = 'api/v1/resource/Timesheet/QUERY';
 my $postvars = '{"search": {"f1": {"field":"Date", "type":"ge", "data":"'.$ARGV[0].'"}, "f2": {"field":"Date", "type":"le", "data":"'.$ARGV[1].'"}}}';
 my $response_body = Deputy::POST($url, $postvars);
 
@@ -16,6 +16,7 @@ my $filename = "timesheet.csv";
 open(FH, '>', $filename) or die $!;
 print FH "\"Display Name\",\"Timesheet Date\",\"Timesheet Start Time\",\"Timesheet End Time\",\"Timesheet Total Time\",\"Schedule Start Time\",\"Schedule End Time\",\"Employee Export Code\"\n";
 
+# print $response_body."\n";
 my @json_arr = parse_json($response_body);
 
 my @arr = @{$json_arr[0]};
@@ -29,11 +30,22 @@ for(my $i=0; $i<$arr_size; $i++) {
 
 		# print "employee:\n".JSON->new->pretty->encode(\%employee);
 		my $display_name = $employee{"DisplayName"};
+		if (!defined $display_name) {
+			$display_name = '';
+		}
+
 		my $employee_id = $employee{"Id"};
+		if (!defined $employee_id) {
+			$employee_id = '';
+		}
+
 		my $ii = $i+1;
 		print "$ii($arr_size) $display_name ($employee_id)\n";
 
 		my $employee_export_code = $employee{"PayrollId"};
+		if (!defined $employee_export_code) {
+			$employee_export_code = '';
+		}
 
 		my $timesheet_date = substr $rec{"StartTimeLocalized"}, 0, 10;
 		my $timesheet_start_time = substr $rec{"StartTimeLocalized"}, 11, 5;

@@ -8,7 +8,7 @@ use JSON::Parse 'parse_json';
 use Deputy;
 
 
-my $url = '/api/v1/resource/Roster/QUERY';
+my $url = 'api/v1/resource/Roster/QUERY';
 my $postvars = '{"search": {"f1": {"field":"Id", "type":"gt", "data":0}, "f2": {"field":"Date", "type":"eq", "data":"'.$ARGV[0].'"}}}';
 my $response_body = Deputy::POST($url, $postvars);
 
@@ -16,8 +16,8 @@ my $filename = "roster.csv";
 open(FH, '>', $filename) or die $!;
 print FH "\"Display Name\",\"Schedule Date\",\"Schedule Start Time\",\"Schedule End Time\",\"Schedule Meal Break (Total)\",\"Schedule Total Time\",\"Timesheet Start Time\",\"Timesheet End Time\",\"Position\"\n";
 
-my @json_arr = parse_json($response_body);
 # print $response_body."\n";
+my @json_arr = parse_json($response_body);
 
 my @arr = @{$json_arr[0]};
 my $arr_size = scalar @arr;
